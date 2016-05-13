@@ -4,15 +4,15 @@ import collections
 
 
 
-FILE = "ai-trimmed.png"
+FILE1 = "data/kanji-Gothic/kanji_1.png"
+FILE2 = "data/kanji-Mincho/kanji_1.png"
+FILE3 = "data/kanji-Mincho/kanji_2.png"
 
 def show(img):
   cv2.imshow('title', img)
   cv2.waitKey()
-  
 
-def main():
-  img = cv2.imread(FILE, cv2.IMREAD_GRAYSCALE)
+def PDC_features(img):
 
   # black is 0, white is 255
   (thresh, im_bw) = cv2.threshold(
@@ -27,7 +27,8 @@ def main():
     (0, 47, 1, -1, 0)
   ]
   directionLayers = []
-  for d in CARDINAL_DIRS:
+  
+  for startcol, startrow, drow, dcol, row_order in CARDINAL_DIRS:
     full_row_vals = []
     for i in range(48):
       # each row
@@ -35,27 +36,37 @@ def main():
       layers = [0] * 3
       start = None
       for j in range(48):
-        if d[4] == 1:
-          pixelVal = scaled[d[0] + i * d[2], d[1] + j * d[3]];
+        if row_order == 1:
+          pixelVal = scaled[startcol + i * drow, startrow + j * dcol];
         else:
-          pixelVal = scaled[d[1] + j * d[3], d[0] + i * d[2]];
+          pixelVal = scaled[startrow + j * dcol, startcol + i * drow];
         if start == None and pixelVal == 0:
           start = j
         if start != None and pixelVal != 0:
-          layers[l_i] = abs(abs(d[3] * j + d[2] * (i))-start)
+          layers[l_i] = abs(abs(dcol * j + drow * (i))-start)
           l_i += 1
           start = None
           if l_i == 3:
             break
       full_row_vals.append(layers)
     directionLayers.append(full_row_vals);
-
-  for full_row_vals in directionLayers:
-    vals = [np.mean(full_row_vals[i:i+8], axis=0) for i in range(0,48, 8)]
-    print vals
-
-
-
+  
+  return [ 
+      [np.mean(row_vals[i:i+8], axis=0) for i in range(0,48, 8)]
+      for row_vals in directionLayers
+  ]
 
 
-main()
+def main():
+  img1 = cv2.imread(FILE1, cv2.IMREAD_GRAYSCALE)
+  img2 = cv2.imread(FILE2, cv2.IMREAD_GRAYSCALE)
+  img3 = cv2.imread(FILE3, cv2.IMREAD_GRAYSCALE)
+
+  for a,b,c in zip(PDC_features(img1), PDC_features(img2), PDC_features(img3)):
+    print a
+    print b
+    print c
+    print "=="
+
+if __name__ == "__main__":
+  main()

@@ -51,22 +51,24 @@ def PDC_features(img):
       full_row_vals.append(layers)
     directionLayers.append(full_row_vals);
   
-  return [ 
+  results = [ 
       [np.mean(row_vals[i:i+8], axis=0) for i in range(0,48, 8)]
       for row_vals in directionLayers
   ]
 
+  return np.concatenate(results, axis=1).flatten()
+
 
 def main():
   img1 = cv2.imread(FILE1, cv2.IMREAD_GRAYSCALE)
-  img2 = cv2.imread(FILE2, cv2.IMREAD_GRAYSCALE)
-  img3 = cv2.imread(FILE3, cv2.IMREAD_GRAYSCALE)
-
-  for a,b,c in zip(PDC_features(img1), PDC_features(img2), PDC_features(img3)):
-    print a
-    print b
-    print c
-    print "=="
+  #img2 = cv2.imread(FILE2, cv2.IMREAD_GRAYSCALE)
+  #img3 = cv2.imread(FILE3, cv2.IMREAD_GRAYSCALE)
+  print PDC_features(img1)
+  #for a,b,c in zip(PDC_features(img1), PDC_features(img2), PDC_features(img3)):
+    #print a
+    #print b
+    #print c
+    #print "=="
 
 if __name__ == "__main__":
   main()

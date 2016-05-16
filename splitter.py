@@ -7,7 +7,7 @@ import collections
 
 EXAMPLE = "data/matthew/matthew_1.png"
 
-def main():
+def split(im_name=EXAMPLE):
   img = cv2.imread(EXAMPLE, cv2.IMREAD_GRAYSCALE) 
   (thresh, im_bw) = cv2.threshold(
       img, 128, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
@@ -42,13 +42,15 @@ def main():
         chars[li].append((img[rstart:rend,:][:, start:i], (start, i)))
         start = None
   
+  #return a flattened list
+  return chars
 
-  for li, (row, (rstart, rend)) in enumerate(lines):
-    for _, (cstart, cend) in chars.get(li):
-      cv2.rectangle(img, (cstart, rstart), (cend, rend), 0)
+  #for li, (row, (rstart, rend)) in enumerate(lines):
+  #  for _, (cstart, cend) in chars.get(li):
+  #    cv2.rectangle(img, (cstart, rstart), (cend, rend), 0)
   
-  cv2.imshow('asdf', img)
-  cv2.waitKey()
+  #cv2.imshow('asdf', img)
+  #cv2.waitKey()
   
 if __name__ == '__main__':
   main()

@@ -8,7 +8,7 @@ import collections
 EXAMPLE = "data/matthew/matthew_1.png"
 
 def split(im_name=EXAMPLE):
-  img = cv2.imread(EXAMPLE, cv2.IMREAD_GRAYSCALE) 
+  img = cv2.imread(im_name, cv2.IMREAD_GRAYSCALE) 
   (thresh, im_bw) = cv2.threshold(
       img, 128, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
 
@@ -39,7 +39,7 @@ def split(im_name=EXAMPLE):
       elif start == None:
         start = i
       elif start != None and sum(col) == 0 and i - start > MIN_WIDTH:
-        chars[li].append((img[rstart:rend,:][:, start:i], (start, i)))
+        chars[li].append((img[rstart:rend,:][:, start:i]))
         start = None
   
   #return a flattened list

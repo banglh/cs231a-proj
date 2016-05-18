@@ -12,11 +12,14 @@ def show(img):
   cv2.imshow('title', img)
   cv2.waitKey()
 
-def PDC_features(img):
+def PDC_features(img, bw = False):
 
   # black is 0, white is 255
-  (thresh, im_bw) = cv2.threshold(
-            img, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+  if bw:
+    im_bw = img
+  else:
+    (thresh, im_bw) = cv2.threshold(
+              img, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
   scaled = cv2.resize(im_bw, (48, 48))
 
   CARDINAL_DIRS = [

@@ -12,11 +12,50 @@ def show(img):
   cv2.imshow('title', img)
   cv2.waitKey()
 
-def PDC_features(img):
 
+def PDC_diag_features(img):
   # black is 0, white is 255
   (thresh, im_bw) = cv2.threshold(
-            img, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+            img, 128, 255, cv2.THRESH_BINARY)
+  scaled = cv2.resize(im_bw, (48, 48))
+
+  all_layers = []
+
+  for startrow in range(48):
+    for dx, startcol in ((-1, 47), (1, 0)):
+      for dy in (-1, 1):
+        x = startrow
+        y = startcol
+        layers = [0] * 3
+        l_i = 0
+        start = None
+        while x in range(48) and y in range(48):
+          pixelVal = scaled[x,y]
+          if start == None and pixelVal == 0:
+            start = x
+          if start!=None and pixelVal != 0:
+            layers[l_i] = abs(x - start)
+            l_i = 0
+            start = None
+            if l_i == 3:
+              break
+          x += dx
+          y += dy
+        all_layers.append(layers)
+        
+  results = [ 
+      [np.mean(row_vals[i:i+8], axis=0) for i in range(0,len(all_layers), 8)]
+      for row_vals in all_layers
+  ]
+
+  return results
+
+
+
+def PDC_features(img):
+  # black is 0, white is 255
+  (thresh, im_bw) = cv2.threshold(
+            img, 128, 255, cv2.THRESH_BINARY)
   scaled = cv2.resize(im_bw, (48, 48))
 
   CARDINAL_DIRS = [
@@ -61,14 +100,14 @@ def PDC_features(img):
 
 def main():
   img1 = cv2.imread(FILE1, cv2.IMREAD_GRAYSCALE)
-  #img2 = cv2.imread(FILE2, cv2.IMREAD_GRAYSCALE)
+  img2 = cv2.imread(FILE2, cv2.IMREAD_GRAYSCALE)
   #img3 = cv2.imread(FILE3, cv2.IMREAD_GRAYSCALE)
-  print PDC_features(img1)
-  #for a,b,c in zip(PDC_features(img1), PDC_features(img2), PDC_features(img3)):
-    #print a
-    #print b
+  #print PDC_features(img1)
+  for a,b in zip(PDC_diag_features(img1), PDC_diag_features(img2)): #, PDC_features(img3)):
+    print a
+    print b
     #print c
-    #print "=="
+    print "=="
 
 if __name__ == "__main__":
   main()

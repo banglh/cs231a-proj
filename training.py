@@ -9,13 +9,15 @@ import time
 import numpy as np
 import codecs
 
+NUM_KANJI = 2289
+
 
 class Classifier:
-	fonts = ['Gothic', 'Lantinghei', 'Meiryo', 'Mincho', 'Osaka', 'STFangSong', 'GenEiExtraLight', 'GenEiHeavy', 'GenEiSemiBold', 
-	'HonyaJi', 'Mamelon', 'MPlusBold', 'MPlusRegular', 'MPlusThin', 'WawaSC', 'WeibeiSC']
+	fonts = ['Gothic']#, 'Lantinghei', 'Meiryo', 'Mincho', 'Osaka', 'STFangSong', 'GenEiExtraLight', 'GenEiHeavy', 'GenEiSemiBold', 
+	#'HonyaJi', 'Mamelon', 'MPlusBold', 'MPlusRegular', 'MPlusThin', 'WawaSC', 'WeibeiSC']
 
 	def __init__(self):
-		self.kanjiFile = "data/kanjiOnlyutf8.csv"
+		self.kanjiFile = "kanji_list.txt"
 
 		self.training_data = []
 		self.targets = []
@@ -27,7 +29,7 @@ class Classifier:
 
 	def train(self):
 		for font in self.fonts:
-			for i in range(2136):
+			for i in range(NUM_KANJI):
 				im = cv2.imread('data/kanji-%s/kanji_%d.png' % (font, i + 1), cv2.IMREAD_GRAYSCALE)
 				feats = PDC_features(im)
 				self.training_data.append(feats)
@@ -44,20 +46,21 @@ class Classifier:
 		return results
 
 	def getKanji(self, i):
-		return self.kanjiList(i)
+		return self.kanjiList[i]
 
 def main():
 	classifier = Classifier()
 	classifier.train()
+	print "done training"
 
 	numRight = 0
-	for i in range(2136):
-		im = cv2.imread('data/kanji-Yuanti/kanji_%d.png' % (i + 1), cv2.IMREAD_GRAYSCALE)
+	for i in range(NUM_KANJI):
+		im = cv2.imread('data/kanji-Gothic/kanji_%d.png' % (i + 1), cv2.IMREAD_GRAYSCALE)
 		result = classifier.classify(im)
-		if result == classifier.getKanji[i]:
+		if result == classifier.getKanji(i):
 			numRight += 1
 
-	print "Got %d/%d right" % (numRight, 2136)
+	print "Got %d/%d right" % (numRight, NUM_KANJI)
 
 if __name__ == "__main__":
 	main()

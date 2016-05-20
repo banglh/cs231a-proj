@@ -21,35 +21,28 @@ def PDC_diag_features(img):
 
   all_layers = []
 
-  for startrow in range(48):
-    for dx, startcol in ((-1, 47), (1, 0)):
-      for dy in (-1, 1):
-        x = startrow
-        y = startcol
-        layers = [0] * 3
-        l_i = 0
+  # Whoah https://stackoverflow.com/questions/6313308/get-all-the-diagonals-in-a-matrix-list-of-lists-in-python
+  diags = [scaled[::-1,:].diagonal(i)
+            for i in range(-scaled.shape[0]+1,scaled.shape[1])]
+  diags.extend(scaled.diagonal(i) for i in range(scaled.shape[1]-1,-scaled.shape[0],-1))
+  for run in diags:
+    start = None
+    layers = [0] * 3
+    l_i = 0
+    for i, pixel in enumerate(run):
+      if start == None and pixel == 0:
+        start = i
+      if start != None and pixel != 0:
+        layers[l_i] = i - start
         start = None
-        while x in range(48) and y in range(48):
-          pixelVal = scaled[x,y]
-          if start == None and pixelVal == 0:
-            start = x
-          if start!=None and pixelVal != 0:
-            layers[l_i] = abs(x - start)
-            l_i = 0
-            start = None
-            if l_i == 3:
-              break
-          x += dx
-          y += dy
-        all_layers.append(layers)
-        
-  results = [ 
-      [np.mean(row_vals[i:i+8], axis=0) for i in range(0,len(all_layers), 8)]
-      for row_vals in all_layers
-  ]
+        l_i += 1
+        if l_i == 3:
+          break
+    all_layers.append(layers)
 
-  return results
-
+  # not sure if this is perfect :/
+  l = len(all_layers)
+  return [np.mean(all_layers[row:row+8], axis=0) for row in range(0, l, 8)]
 
 
 def PDC_features(img):
@@ -66,7 +59,7 @@ def PDC_features(img):
     (0, 47, 1, -1, 0)
   ]
   directionLayers = []
-  
+
   for startcol, startrow, drow, dcol, row_order in CARDINAL_DIRS:
     full_row_vals = []
     for i in range(48):
@@ -89,8 +82,8 @@ def PDC_features(img):
             break
       full_row_vals.append(layers)
     directionLayers.append(full_row_vals);
-  
-  results = [ 
+
+  results = [
       [np.mean(row_vals[i:i+8], axis=0) for i in range(0,48, 8)]
       for row_vals in directionLayers
   ]

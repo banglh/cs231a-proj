@@ -12,14 +12,47 @@ def show(img):
   cv2.imshow('title', img)
   cv2.waitKey()
 
-def PDC_features(img, bw = False):
-
-  # black is 0, white is 255
+def PDC_diag_features(img, bw = False):
   if bw:
     im_bw = img
   else:
     (thresh, im_bw) = cv2.threshold(
               img, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+  scaled = cv2.resize(im_bw, (48, 48))
+  
+  all_layers = []
+
+  # Whoah https://stackoverflow.com/questions/6313308/get-all-the-diagonals-in-a-matrix-list-of-lists-in-python
+  diags = [scaled[::-1,:].diagonal(i)
+            for i in range(-scaled.shape[0]+1,scaled.shape[1])]
+  diags.extend(scaled.diagonal(i) for i in range(scaled.shape[1]-1,-scaled.shape[0],-1))
+  for run in diags:
+    start = None
+    layers = [0] * 3
+    l_i = 0
+    for i, pixel in enumerate(run):
+      if start == None and pixel == 0:
+        start = i
+      if start != None and pixel != 0:
+        layers[l_i] = i - start
+        start = None
+        l_i += 1
+        if l_i == 3:
+          break
+    all_layers.append(layers)
+
+  # not sure if this is perfect :/
+  l = len(all_layers)
+  return [np.mean(all_layers[row:row+8], axis=0) for row in range(0, l, 8)]
+
+
+def PDC_features(img, bw = False):
+  if bw:
+    im_bw = img
+  else:
+    (thresh, im_bw) = cv2.threshold(
+              img, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+  # black is 0, white is 255
   scaled = cv2.resize(im_bw, (48, 48))
 
   CARDINAL_DIRS = [
@@ -30,7 +63,7 @@ def PDC_features(img, bw = False):
     (0, 47, 1, -1, 0)
   ]
   directionLayers = []
-  
+
   for startcol, startrow, drow, dcol, row_order in CARDINAL_DIRS:
     full_row_vals = []
     for i in range(48):
@@ -53,8 +86,8 @@ def PDC_features(img, bw = False):
             break
       full_row_vals.append(layers)
     directionLayers.append(full_row_vals);
-  
-  results = [ 
+
+  results = [
       [np.mean(row_vals[i:i+8], axis=0) for i in range(0,48, 8)]
       for row_vals in directionLayers
   ]
@@ -64,14 +97,14 @@ def PDC_features(img, bw = False):
 
 def main():
   img1 = cv2.imread(FILE1, cv2.IMREAD_GRAYSCALE)
-  #img2 = cv2.imread(FILE2, cv2.IMREAD_GRAYSCALE)
+  img2 = cv2.imread(FILE2, cv2.IMREAD_GRAYSCALE)
   #img3 = cv2.imread(FILE3, cv2.IMREAD_GRAYSCALE)
-  print PDC_features(img1)
-  #for a,b,c in zip(PDC_features(img1), PDC_features(img2), PDC_features(img3)):
-    #print a
-    #print b
+  #print PDC_features(img1)
+  for a,b in zip(PDC_diag_features(img1), PDC_diag_features(img2)): #, PDC_features(img3)):
+    print a
+    print b
     #print c
-    #print "=="
+    print "=="
 
 if __name__ == "__main__":
   main()

@@ -12,7 +12,7 @@ import codecs
 
 class Classifier:
 	fonts = ['Gothic', 'Lantinghei', 'Meiryo', 'Mincho', 'Osaka', 'STFangSong', 'GenEiExtraLight', 'GenEiHeavy', 'GenEiSemiBold', 
-	'HonyaJi', 'Mamelon', 'MPlusBold', 'MPlusRegular', 'MPlusThin', 'WawaSC', 'WeibeiSC', 'Yuanti']
+	'HonyaJi', 'Mamelon', 'MPlusBold', 'MPlusRegular', 'MPlusThin', 'WawaSC', 'WeibeiSC']
 
 	def __init__(self):
 		self.kanjiFile = "data/kanjiOnlyutf8.csv"
@@ -42,4 +42,23 @@ class Classifier:
 		feats = PDC_features(im, True)
 		results =  self.gnb.predict(feats)
 		return results
+
+	def getKanji(self, i):
+		return self.kanjiList(i)
+
+def main():
+	classifier = Classifier()
+	classifier.train()
+
+	numRight = 0
+	for i in range(2136):
+		im = cv2.imread('data/kanji-Yuanti/kanji_%d.png' % (i + 1), cv2.IMREAD_GRAYSCALE)
+		result = classifier.classify(im)
+		if result == classifier.getKanji[i]:
+			numRight += 1
+
+	print "Got %d/%d right" % (numRight, 2136)
+
+if __name__ == "__main__":
+	main()
 

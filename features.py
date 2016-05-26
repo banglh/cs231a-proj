@@ -122,14 +122,14 @@ def PDC_features(img, bw = False):
 
   return np.concatenate(results, axis=1).flatten()
 
-def all_features(im, bw = False):
+def all_Features(im, bw = False):
   return np.concatenate((
     PDC_features(im, bw),
     PDC_diag_features(im, bw)
   ))
 
 
-def all_Features(img, bw = False):
+def all_features(img, bw = False):
   if not bw:
     (thresh, im_bw) = cv2.threshold(
                 img, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
@@ -137,7 +137,7 @@ def all_Features(img, bw = False):
     im_bw = img
   # black is 0, white is 255
   scaled = cv2.resize(im_bw, (48, 48))
-  feats = np.append(PDC_features(scaled, bw), PDC_diag_features(scaled, bw))
+  feats = np.append(PDC_features(scaled, True), PDC_diag_features(scaled, True))
   feats = np.append(feats, orbFeatures(scaled))
   return feats
 

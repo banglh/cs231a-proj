@@ -14,8 +14,8 @@ NUM_KANJI = 2289
 kernel = np.ones((5,5),np.uint8)
 
 class Classifier:
-	fonts = ['Gothic', 'Lantinghei', 'Meiryo',] # 'Mincho', 'Osaka', 'STFangSong', 'GenEiExtraLight', 'GenEiHeavy', 'GenEiSemiBold']
-	#'HonyaJi', 'Mamelon', 'MPlusBold', 'MPlusRegular', 'MPlusThin', 'WawaSC', 'WeibeiSC']
+	fonts = ['Gothic', 'Lantinghei', 'Meiryo', 'Mincho', 'Osaka', 'STFangSong', 'GenEiExtraLight', 'GenEiHeavy', 'GenEiSemiBold',
+	'HonyaJi', 'MPlusBold', 'MPlusRegular', 'MPlusThin', 'WawaSC', 'WeibeiSC']
 
 	def __init__(self):
 		self.kanjiFile = "kanji_list.txt"

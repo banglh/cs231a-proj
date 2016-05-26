@@ -43,7 +43,9 @@ def PDC_diag_features(img, bw = False):
 
   # not sure if this is perfect :/
   l = len(all_layers)
-  return [np.mean(all_layers[row:row+8], axis=0) for row in range(0, l, 8)]
+  results = [np.mean(all_layers[row:row+8], axis=0) for row in range(0, l, 8)]
+  
+  return np.concatenate(results).flatten()
 
 
 def PDC_features(img, bw = False):
@@ -93,6 +95,12 @@ def PDC_features(img, bw = False):
   ]
 
   return np.concatenate(results, axis=1).flatten()
+
+def all_features(im, bw = False):
+  return np.concatenate((
+    PDC_features(im, bw),
+    PDC_diag_features(im, bw)
+  ))
 
 
 def main():

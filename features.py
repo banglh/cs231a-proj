@@ -1,12 +1,38 @@
 import cv2
 import numpy as np
 import collections
+import math
 
 
 
 FILE1 = "data/kanji-Gothic/kanji_1.png"
 FILE2 = "data/kanji-Mincho/kanji_1.png"
 FILE3 = "data/kanji-Mincho/kanji_2.png"
+
+NUM_BINS = 4
+
+def getSurfBins(img, kps):
+  height, width = img.shape
+  binW = math.floor(width / NUM_BINS)
+  binH = math.floor(height / NUM_BINS)
+
+  bins = np.zeros((NUM_BINS, NUM_BINS))
+
+  for kp in kps:
+    x = min(math.floor(kp.pt[0] / binH), NUM_BINS - 1)
+    y = min(math.floor(kp.pt[1] / binW), NUM_BINS - 1)
+    bins[x, y] += 1
+
+  bins.flatten()
+  #print bins
+  return bins.flatten()
+
+
+def orbFeatures(img):
+  orb = cv2.ORB_create()
+  kp = orb.detect(img, None)
+  bins = getSurfBins(img, kp)
+  return bins
 
 def show(img):
   cv2.imshow('title', img)
@@ -93,6 +119,19 @@ def PDC_features(img, bw = False):
   ]
 
   return np.concatenate(results, axis=1).flatten()
+
+
+def all_Features(img, bw = False):
+  if not bw:
+    (thresh, im_bw) = cv2.threshold(
+                img, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+  else:
+    im_bw = img
+  # black is 0, white is 255
+  scaled = cv2.resize(im_bw, (48, 48))
+  feats = np.append(PDC_features(scaled, bw), PDC_diag_features(scaled, bw))
+  feats = np.append(feats, orbFeatures(scaled))
+  return feats
 
 
 def main():

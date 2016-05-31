@@ -34,6 +34,23 @@ def orbFeatures(img):
   bins = getSurfBins(img, kp)
   return bins
 
+def COG(img):
+  height, width = img.shape
+  numPoints = 0
+  heightTotal = 0
+  widthTotal = 0
+  for h in range(height):
+    for w in range(width):
+      if img[h, w] == 0:
+        numPoints += 1
+        heightTotal += h 
+        widthTotal += w
+
+  if numPoints != 0:
+    widthTotal /= numPoints
+    heightTotal /= numPoints
+  return np.array((widthTotal, heightTotal))
+
 def show(img):
   cv2.imshow('title', img)
   cv2.waitKey()
@@ -139,6 +156,7 @@ def all_features(img, bw = False):
   scaled = cv2.resize(im_bw, (48, 48))
   feats = np.append(PDC_features(scaled, True), PDC_diag_features(scaled, True))
   feats = np.append(feats, orbFeatures(scaled))
+  feats = np.append(feats, COG(scaled))
   return feats
 
 

@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import collections
 import math
-
+from scipy import ndimage
 
 
 FILE1 = "data/kanji-Gothic/kanji_1.png"
@@ -43,7 +43,7 @@ def COG(img):
     for w in range(width):
       if img[h, w] == 0:
         numPoints += 1
-        heightTotal += h 
+        heightTotal += h
         widthTotal += w
 
   if numPoints != 0:
@@ -62,7 +62,7 @@ def PDC_diag_features(img, bw = False):
     (thresh, im_bw) = cv2.threshold(
               img, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
   scaled = cv2.resize(im_bw, (48, 48))
-  
+
   all_layers = []
 
   # Whoah https://stackoverflow.com/questions/6313308/get-all-the-diagonals-in-a-matrix-list-of-lists-in-python
@@ -87,7 +87,7 @@ def PDC_diag_features(img, bw = False):
   # not sure if this is perfect :/
   l = len(all_layers)
   results = [np.mean(all_layers[row:row+8], axis=0) for row in range(0, l, 8)]
-  
+
   return np.concatenate(results).flatten()
 
 
@@ -139,12 +139,25 @@ def PDC_features(img, bw = False):
 
   return np.concatenate(results, axis=1).flatten()
 
-def all_Features(im, bw = False):
-  return np.concatenate((
-    PDC_features(im, bw),
-    PDC_diag_features(im, bw)
-  ))
+def global_features(img):
+    height, width = img.shape
+    height_width_ratio = 1. * height / width
+    x_com, y_com = ndimage.measurements.center_of_mass(img)
 
+    row_std = np.mean(np.std(img, axis=0))
+    col_std = np.mean(np.std(img, axis=1))
+
+    num_blk_pixels = height * width - (1. * np.sum(img) / 255)
+    ratio_filled = num_blk_pixels / (height * width)
+
+    return np.array([
+        height_width_ratio,
+        x_com,
+        y_com,
+        row_std,
+        col_std,
+        ratio_filled,
+    ])
 
 def all_features(img, bw = False):
   if not bw:
@@ -154,9 +167,13 @@ def all_features(img, bw = False):
     im_bw = img
   # black is 0, white is 255
   scaled = cv2.resize(im_bw, (48, 48))
-  feats = np.append(PDC_features(scaled, True), PDC_diag_features(scaled, True))
-  feats = np.append(feats, orbFeatures(scaled))
-  feats = np.append(feats, COG(scaled))
+  feats = np.concatenate((
+    global_features(img),
+    PDC_features(scaled, True),
+    PDC_diag_features(scaled, True),
+    COG(scaled),
+    orbFeatures(scaled),
+  ))
   return feats
 
 

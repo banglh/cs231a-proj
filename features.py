@@ -10,6 +10,7 @@ FILE2 = "data/kanji-Mincho/kanji_1.png"
 FILE3 = "data/kanji-Mincho/kanji_2.png"
 
 NUM_BINS = 4
+SCALED_SIZE = 48
 
 def getSurfBins(img, kps):
   height, width = img.shape
@@ -61,7 +62,7 @@ def PDC_diag_features(img, bw = False):
   else:
     (thresh, im_bw) = cv2.threshold(
               img, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
-  scaled = cv2.resize(im_bw, (48, 48))
+  scaled = cv2.resize(im_bw, (SCALED_SIZE, SCALED_SIZE))
 
   all_layers = []
 
@@ -98,7 +99,7 @@ def PDC_features(img, bw = False):
     (thresh, im_bw) = cv2.threshold(
               img, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
   # black is 0, white is 255
-  scaled = cv2.resize(im_bw, (48, 48))
+  scaled = cv2.resize(im_bw, (SCALED_SIZE, SCALED_SIZE))
 
   CARDINAL_DIRS = [
     # startcol, startrow, drow, dcol, row_order
@@ -111,12 +112,12 @@ def PDC_features(img, bw = False):
 
   for startcol, startrow, drow, dcol, row_order in CARDINAL_DIRS:
     full_row_vals = []
-    for i in range(48):
+    for i in range(SCALED_SIZE):
       # each row
       l_i = 0
       layers = [0] * 3
       start = None
-      for j in range(48):
+      for j in range(SCALED_SIZE):
         if row_order == 1:
           pixelVal = scaled[startcol + i * drow, startrow + j * dcol];
         else:
@@ -133,7 +134,7 @@ def PDC_features(img, bw = False):
     directionLayers.append(full_row_vals);
 
   results = [
-      [np.mean(row_vals[i:i+8], axis=0) for i in range(0,48, 8)]
+      [np.mean(row_vals[i:i+8], axis=0) for i in range(0,SCALED_SIZE, 8)]
       for row_vals in directionLayers
   ]
 
@@ -159,14 +160,17 @@ def global_features(img):
         ratio_filled,
     ])
 
-def all_features(img, bw = False):
+def all_features(img, bw = False, classifying = False):
   if not bw:
     (thresh, im_bw) = cv2.threshold(
                 img, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
   else:
     im_bw = img
   # black is 0, white is 255
-  scaled = cv2.resize(im_bw, (48, 48))
+  scaled = cv2.resize(im_bw, (SCALED_SIZE, SCALED_SIZE))
+  #if classifying:
+    #cv2.imshow('asdfasdf', scaled)
+    #cv2.waitKey()
   feats = np.concatenate((
     global_features(img),
     PDC_features(scaled, True),

@@ -17,9 +17,9 @@ NUM_THREADS = 8
 
 kernel = np.ones((5,5),np.uint8)
 
-fonts = ['Gothic', 'Lantinghei', 'Meiryo', 'Mincho', 'Osaka', 'STFangSong',
-		'GenEiExtraLight', 'GenEiHeavy', 'GenEiSemiBold', 'HonyaJi', 'MPlusBold',
-		'MPlusRegular', 'MPlusThin', 'WawaSC', 'WeibeiSC']
+fonts = ['Mincho']#['Gothic']#, 'Lantinghei', 'Meiryo', 'Mincho', 'Osaka', 'STFangSong',
+		#'GenEiExtraLight', 'GenEiHeavy', 'GenEiSemiBold', 'HonyaJi', 'MPlusBold',
+		#'MPlusRegular', 'MPlusThin', 'WawaSC', 'WeibeiSC']
 
 def extract_features(filename):
 	im = cv2.imread(filename, cv2.IMREAD_GRAYSCALE)
@@ -55,8 +55,8 @@ class Classifier:
 		self.model.fit(self.training_data, self.targets)
 
 	def classify(self, im):
-		feats = all_features(im, True)
-		results =  self.model.predict(feats.reshape(1, -1))
+		feats = all_features(im, True, True)
+		results =  self.model.predict(feats.reshape(1, -1))		
 		return results
 
 	def getKanji(self, i):

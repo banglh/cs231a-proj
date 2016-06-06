@@ -3,6 +3,7 @@
 
 from features import all_features
 from sklearn.naive_bayes import GaussianNB
+from splitter import trim_char
 import cv2
 import unicodecsv as csv
 import time
@@ -17,7 +18,7 @@ NUM_THREADS = 8
 
 kernel = np.ones((5,5),np.uint8)
 
-fonts = ['Mincho']#['Gothic']#, 'Lantinghei', 'Meiryo', 'Mincho', 'Osaka', 'STFangSong',
+fonts = ['Mincho']#['Gothic', 'Lantinghei', 'Meiryo', 'Mincho', 'Osaka', 'STFangSong',
 		#'GenEiExtraLight', 'GenEiHeavy', 'GenEiSemiBold', 'HonyaJi', 'MPlusBold',
 		#'MPlusRegular', 'MPlusThin', 'WawaSC', 'WeibeiSC']
 
@@ -44,7 +45,7 @@ class Classifier:
 		for font in fonts:
 			for i in range(NUM_KANJI):
 				filenames.append('data/kanji-%s/kanji_%d.png' % (font, i + 1))
-				self.targets.append(self.kanjiList[i])
+				self.targets.append(self.kanjiList[i])		        
 
 		print 'Extracting Features'
 		pool = Pool(NUM_THREADS)

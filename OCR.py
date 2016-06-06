@@ -25,7 +25,8 @@ def main():
 			chars = split('./data/matthew/%s' % fn)
 			for _, line in chars.iteritems():
 				for char in line:
-					charout = classifier.classify(255 - char)
+					char = 255 - char
+					charout = classifier.classify(char)
 					fw.write(unicode(charout[0]))
 				fw.write('\n')
 		print "Finished Matthew %d at %ds\n" % (i, (time.time() - start))

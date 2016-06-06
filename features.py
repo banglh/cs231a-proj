@@ -3,13 +3,15 @@ import numpy as np
 import collections
 import math
 from scipy import ndimage
+from splitter import trim_char
 
 
 FILE1 = "data/kanji-Gothic/kanji_1.png"
 FILE2 = "data/kanji-Mincho/kanji_1.png"
 FILE3 = "data/kanji-Mincho/kanji_2.png"
 
-NUM_BINS = 4
+NUM_BINS = 2
+NUM_LARGE_BINS = 2
 SCALED_SIZE = 48
 
 def getSurfBins(img, kps):
@@ -36,7 +38,23 @@ def orbFeatures(img):
   return bins
 
 def COG(img):
+
+  cogs = np.zeros(NUM_LARGE_BINS * NUM_LARGE_BINS * 2)
   height, width = img.shape
+  for i in range(NUM_LARGE_BINS):
+    for n in range(NUM_LARGE_BINS):
+      im = img[i * height/NUM_LARGE_BINS:(i+1)*height/NUM_LARGE_BINS - 1, n * width/NUM_LARGE_BINS:(n+1)*width/NUM_LARGE_BINS - 1]
+      x_com, y_com = ndimage.measurements.center_of_mass(im)
+      x, y = im.shape
+      if math.isnan(x_com) or math.isnan(y_com):
+        x_com = x / 2
+        y_com = y / 2
+      cogs[i * NUM_LARGE_BINS * 2 + n * 2] = x_com
+      cogs[i * NUM_LARGE_BINS * 2 + n * 2 + 1] = y_com
+
+  return np.array(cogs)
+'''
+  return np.array(cogs)
   numPoints = 0
   heightTotal = 0
   widthTotal = 0
@@ -51,6 +69,7 @@ def COG(img):
     widthTotal /= numPoints
     heightTotal /= numPoints
   return np.array((widthTotal, heightTotal))
+  '''
 
 def show(img):
   cv2.imshow('title', img)
@@ -140,10 +159,27 @@ def PDC_features(img, bw = False):
 
   return np.concatenate(results, axis=1).flatten()
 
+def hog(img):
+  gx = cv2.Sobel(img, cv2.CV_32F, 1, 0)
+  gy = cv2.Sobel(img, cv2.CV_32F, 0, 1)
+  mag, ang = cv2.cartToPolar(gx, gy)
+   
+  # quantizing binvalues in (0...16)
+  bins = np.int32(NUM_BINS*ang/(2*np.pi))
+  # Divide to 4 sub-squares
+  bin_cells = bins[:10,:10], bins[10:,:10], bins[:10,10:], bins[10:,10:]
+  mag_cells = mag[:10,:10], mag[10:,:10], mag[:10,10:], mag[10:,10:]
+  hists = [np.bincount(b.ravel(), m.ravel(), NUM_BINS) for b, m in zip(bin_cells, mag_cells)]
+  hist = np.hstack(hists)
+  return hist
+
 def global_features(img):
     height, width = img.shape
     height_width_ratio = 1. * height / width
     x_com, y_com = ndimage.measurements.center_of_mass(img)
+    if math.isnan(x_com) or math.isnan(y_com):
+        x_com = width / 2
+        y_com = height / 2
 
     row_std = np.mean(np.std(img, axis=0))
     col_std = np.mean(np.std(img, axis=1))
@@ -167,16 +203,18 @@ def all_features(img, bw = False, classifying = False):
   else:
     im_bw = img
   # black is 0, white is 255
+  im_bw = 255 - trim_char(255 - im_bw)
+  if im_bw.size == 0:
+    print "empty img, should be impossible"
+
   scaled = cv2.resize(im_bw, (SCALED_SIZE, SCALED_SIZE))
-  #if classifying:
-    #cv2.imshow('asdfasdf', scaled)
-    #cv2.waitKey()
   feats = np.concatenate((
     global_features(img),
     PDC_features(scaled, True),
     PDC_diag_features(scaled, True),
     COG(scaled),
     orbFeatures(scaled),
+    hog(scaled)
   ))
   return feats
 

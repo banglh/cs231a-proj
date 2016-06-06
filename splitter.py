@@ -42,23 +42,39 @@ def estimate_pitch(row):
 
 def trim_char(im):
   height, width = im.shape
-  start = 0
-  end = width - 1
+  startW = 0
+  endW = width - 1
   for i in range(width):
     col = im[:,i]
     if sum(col) == 0:
-      start = i
+      startW = i
     else:
       break
 
   for i in range(width):
     col = im[:,width - 1 - i]
     if sum(col) == 0:
-      end = width - 1 - i
+      endW = width - 1 - i
     else:
       break
 
-  return im[:, start:end]
+  startH = 0
+  endH = width - 1
+  for i in range(height):
+    row = im[i,:]
+    if sum(row) == 0:
+      startH = i
+    else:
+      break
+
+  for i in range(height):
+    row = im[height - 1 - i, :]
+    if sum(row) == 0:
+      endH = height - 1 - i
+    else:
+      break
+
+  return im[startH:endH, startW:endW]
 
 def trim_line(row):
   height, width = row.shape
@@ -141,7 +157,7 @@ def split_line(row):
 
     theight, twidth = trimmed.shape
 
-    if twidth > 0:
+    if twidth > 5 and theight > 5:
       chars.append(orig)
       r += bestPitch
     else:
@@ -189,8 +205,13 @@ def findLines(im_bw):
 
 def split(im_name=EXAMPLE):
   img = cv2.imread(im_name, cv2.IMREAD_GRAYSCALE) 
+  #deskewed_img = deskew(img.copy(), compute_skew(img))
+  #cv2.imshow('asdf', deskewed_img)
+  #cv2.waitKey()
   (thresh, im_bw) = cv2.threshold(
       img, 128, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
+
+
 
   angle =  findAngle(im_bw)
 
@@ -206,6 +227,9 @@ def split(im_name=EXAMPLE):
     chars[li] = split_line(row)
   
   #return a flattened list
+  #for i, line in chars.iteritems():
+  #  for n, char in enumerate(line):
+  #      cv2.imwrite("data/chars/kanji-%d-%d.png" % (i, n), im_bw)
   return chars
 
   #for li, (row, (rstart, rend)) in enumerate(lines):
@@ -215,5 +239,34 @@ def split(im_name=EXAMPLE):
   #cv2.imshow('asdf', img)
   #cv2.waitKey()
   
+
+
+def compute_skew(image):
+    image = cv2.bitwise_not(image)
+    height, width = image.shape
+
+    edges = cv2.Canny(image, 150, 200, 3, 5)
+    lines = cv2.HoughLinesP(image, 1, np.pi/180, 100, minLineLength=width / 2.0, maxLineGap=20)
+    angle = 0.0
+    nlines = lines.size
+    for x1, y1, x2, y2 in lines[0]:
+        angle += np.arctan2(y2 - y1, x2 - x1)
+    return angle / nlines
+
+
+def deskew(image, angle):
+    image = cv2.bitwise_not(image)
+    non_zero_pixels = cv2.findNonZero(image)
+    center, wh, theta = cv2.minAreaRect(non_zero_pixels)
+
+    root_mat = cv2.getRotationMatrix2D(center, angle, 1)
+    rows, cols = image.shape
+    rotated = cv2.warpAffine(image, root_mat, (cols, rows), flags=cv2.INTER_CUBIC)
+
+    return cv2.getRectSubPix(rotated, (cols, rows), center)
+
+
+
+
 if __name__ == '__main__':
   split()

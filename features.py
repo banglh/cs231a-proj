@@ -32,7 +32,7 @@ def getSurfBins(img, kps):
 
 
 def orbFeatures(img):
-  orb = cv2.ORB_create()
+  orb = cv2.ORB_create(nfeatures = 5)
   kp = orb.detect(img, None)
   bins = getSurfBins(img, kp)
   return bins
@@ -208,13 +208,14 @@ def all_features(img, bw = False, classifying = False):
     print "empty img, should be impossible"
 
   scaled = cv2.resize(im_bw, (SCALED_SIZE, SCALED_SIZE))
+  scaled_large = cv2.resize(im_bw, (SCALED_SIZE * 6, SCALED_SIZE * 6))
   feats = np.concatenate((
-    global_features(img),
+    #global_features(img),
     PDC_features(scaled, True),
     PDC_diag_features(scaled, True),
     COG(scaled),
-    orbFeatures(scaled),
-    hog(scaled)
+    #orbFeatures(scaled_large),
+    #hog(scaled_large)
   ))
   return feats
 

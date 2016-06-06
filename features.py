@@ -13,6 +13,7 @@ FILE3 = "data/kanji-Mincho/kanji_2.png"
 NUM_BINS = 2
 NUM_LARGE_BINS = 2
 SCALED_SIZE = 48
+PDC_AVG = 4
 
 def getSurfBins(img, kps):
   height, width = img.shape
@@ -106,7 +107,7 @@ def PDC_diag_features(img, bw = False):
 
   # not sure if this is perfect :/
   l = len(all_layers)
-  results = [np.mean(all_layers[row:row+8], axis=0) for row in range(0, l, 8)]
+  results = [np.mean(all_layers[row:row+PDC_AVG], axis=0) for row in range(0, l - PDC_AVG / 2, PDC_AVG / 2)]
 
   return np.concatenate(results).flatten()
 
@@ -153,7 +154,7 @@ def PDC_features(img, bw = False):
     directionLayers.append(full_row_vals);
 
   results = [
-      [np.mean(row_vals[i:i+8], axis=0) for i in range(0,SCALED_SIZE, 8)]
+      [np.mean(row_vals[i:i+PDC_AVG], axis=0) for i in range(0,SCALED_SIZE - PDC_AVG / 2, PDC_AVG / 2)]
       for row_vals in directionLayers
   ]
 

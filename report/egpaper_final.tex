@@ -74,7 +74,7 @@ Even for one character, there is a significant amount of variation between fonts
     \caption{The character for ``to harvest'' across many fonts.}
 \end{figure}
 
-For those unfamiliar with the Japanese language and its textual structure, each character is called a kanji. Kanji themselves are made up of bushu (called “radicals” in English) and a word is made of potentially multiple kanji. There are no spaces in Japanese to separate words. The process of splitting Japanese characters into words remains an unsolved problem and is outside the realm of this class.
+For those unfamiliar with the Japanese language and its textual structure, each character is called a kanji. Kanji themselves are made up of bushu (called ``radicals'' in English) and a word is made of potentially multiple kanji. There are no spaces in Japanese to separate words. The process of splitting Japanese characters into words remains an unsolved problem and is outside the realm of this class.
 
 Our solution has a two-phase approach. The first step of is image segmentation. Our segmentation in well-formed documents is fairly simple, where we use a simple heuristic, which is sufficient for the task of extraction of text that is typewritten and scanned. An interesting area of future work will be the extract of text from non-document images, like road signs, colorful menus, or even sports jerseys. Once we’ve segmented one character from the image, we can use our feature extractor and a Naive Bayes predictor to identify the character. We have a large feature space, which is a necessity to distinguish across the few thousand different characters. The most important contribution of this paper is its implementation and discussion of features and how they affect the success of a machine learning classifier. The classifier presented here outperforms a commercial, online Japanese OCR tool for certain fonts and we believe it would outperform it on all fonts, given enough training data.
 
@@ -83,7 +83,7 @@ There is a surprisingly small amount of literature in English focusing specifica
 
 One invaluable resource was Fumitaka Kimura’s paper OCR Technologies for Machine Printed and Hand Printed Japanese Text. This paper provides a broad survey of available preprocessing and feature-extraction techniques that are used in modern systems. Kimura introduces several important preprocessing steps that we leverage in our system. Kimura provides the reasoning and mathematical basis for skew-correction and outlines a simplistic algorithm for line and character segmentation within well-formed documents. The algorithm Kimura introduces takes advantage of Japanese being fixed pitch -- almost every character in Japanese is roughly the same size, as compared to English, where a lowercase i is much narrower than an uppercase W. Kimura also suggests an advanced skewing operation as a preprocessing step before extracting features. Japanese characters are more dense in the center than they are at the edges. He applies a transformation akin to a fisheye lense: expand the center of the image while decreasing the size of the edges.
 
-One of the most important features that increases accuracy for Chinese OCR comes from Xianli Wu and Min Wu and their paper A Recognition Algorithm For Chinese Characters In Diverse Fonts. In the paper, they introduce a new feature called peripheral directional contributivity. Its implementation is detailed below in SECTION SECTIONNUMBER. This was the most powerful feature we found during our research. The Wu and Wu paper trains different classifiers for each font using the PDC feature. They then train and test on the same font, which delivers excellent results -- averaging 98.6\% accuracy across a test corpus of eight font faces. While impressive, their algorithm is not tested on unseen fonts, which limits its applicability to documents in general. We attempt to improve upon their work by training one classifier across all fonts, which eliminates the need to know the font ahead of time.
+One of the most important features that increases accuracy for Chinese OCR comes from Xianli Wu and Min Wu and their paper A Recognition Algorithm For Chinese Characters In Diverse Fonts. In the paper, they introduce a new feature called peripheral directional contributivity. Its implementation is detailed below in Section ~\ref{section:pdc}. This was the most powerful feature we found during our research. The Wu and Wu paper trains different classifiers for each font using the PDC feature. They then train and test on the same font, which delivers excellent results -- averaging 98.6\% accuracy across a test corpus of eight font faces. While impressive, their algorithm is not tested on unseen fonts, which limits its applicability to documents in general. We attempt to improve upon their work by training one classifier across all fonts, which eliminates the need to know the font ahead of time.
 
 \section{Technical Solution}
 The problem reduces to three sub-problems. First, we need to identify where in an image kanji appear and separate those kanji into individual subimages. Next, we need to classify that character by extracting its important features. However, this is true of all OCR systems, not just Japanese. What makes Japanese OCR more difficult is the large number of characters, as explained in the introduction. This forces us to use a much broader selection of features, not to mention using a larger quantity of them as well.
@@ -115,18 +115,20 @@ In order to provide robust prediction across the many thousands of characters, t
 Before entering the machine learning pipeline, all images undergo a series of transformations in order to standardize the input images across different fonts and documents. First, we convert all images to binary, making the darkest pixels the foreground main font and the background standard white pixels. Then, all the whitespace around the edge of the image is cropped away, finding the tightest bounding box possible for the character. This prevents the effects of varying segmentation from causing irregularities when we extract features. Finally, for some features, we normalize the image into a 48-by-48 square. Normalizing to a small square helps to accentuate the fundamental aspects of the image and limit the effects that the font artist’s creativity can overwhelm our features.
 
 \subsubsection{Peripheral Direction Contributivity}
-The most important and distinctive feature included in the system is the PDC feature which was invented by Xianli Wu and Min Wu in their paper for IEEE ICIP ‘02  [CITATION NEEDED]. The PDC feature vector was designed to recognize Chinese characters across a diverse group of fonts but generalizes quite well to Japanese, whose alphabet shares many characters with that of Chinese.
+\label{section:pdc}
+The most important and distinctive feature included in the system is the PDC feature which was invented by Xianli Wu and Min Wu in their paper for IEEE ICIP '02  (Wu, Wu). The PDC feature vector was designed to recognize Chinese characters across a diverse group of fonts but generalizes quite well to Japanese, whose alphabet shares many characters with that of Chinese.
 
 As an introduction, it is important to realize that in Japanese characters, the strokes  occur primarily in the cardinal directions and along the diagonals. Features should try to capture, in the smallest vector possible, the number of strokes, the orientation of strokes, the location of the strokes, and the length of the strokes. Implicit in those features is also the intersection of the strokes in a character. Each character is fundamentally defined by these types of parameters.
 
 The PDC feature vector attempts to capture these features by first reducing each image to a 48 x 48 pixel square. In this representation, a stroke can be anywhere from 1 to 5 pixels in width and can be up to 30 or 40 pixels long. PDC searches through the image in all directions to identify the length of strokes in that direction.
 
-A PDC feature vector is built in the following way. After scaling the image down or up, the program looks at each row. For each row, the program scans across each row from left to right and counts how many consecutive black pixels are observed in each grouping of black pixels in that row. The length of the first three black groupings is recorded. The process is repeated for all rows, columns, and diagonals in eight different directions: the compass directions and all 45-degree angles. The sixty-four three-tuples recorded for each row or column (127 three-tuples for the diagonals) are averaged into overlapping groups of four. Figure FIGNUM1 (from the Wu and Wu paper) demonstrates how pixels are counted along the eastern direction and it is easy to identify the three clusters of black pixels in that row.
+A PDC feature vector is built in the following way. After scaling the image down or up, the program looks at each row. For each row, the program scans across each row from left to right and counts how many consecutive black pixels are observed in each grouping of black pixels in that row. The length of the first three black groupings is recorded. The process is repeated for all rows, columns, and diagonals in eight different directions: the compass directions and all 45-degree angles. The sixty-four three-tuples recorded for each row or column (127 three-tuples for the diagonals) are averaged into overlapping groups of four. Figure ~\ref{fig:pdc} (from the Wu and Wu paper) demonstrates how pixels are counted along the eastern direction and it is easy to identify the three clusters of black pixels in that row.
 
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.7\columnwidth]{../pdc.png}
     \caption{Construction of PDC feature vector.}
+    \label{fig:pdc}
 \end{figure}
 
 
@@ -159,7 +161,7 @@ An important aspect to consider when looking at Japanese characters is the amoun
 
 \subsubsection{Global Features}
 
-A last feature vector we implemented was also suggested by Shi and Wei’s work on Sanskrit. We have a few features that look “globally” at the image, rather than splitting it up into pieces to calculate a pixel-by-pixel factor like HoG or PDC. This feature does not use the resized image, but rather the original kanji extracted from the segment step. Each global feature is a simple calculation that looks at the entire image, rather than scanning across in bins like histograms of oriented gradients or in rows like the peripheral directional contributivity.
+A last feature vector we implemented was also suggested by Shi and Wei’s work on Sanskrit. We have a few features that look ``globally'' at the image, rather than splitting it up into pieces to calculate a pixel-by-pixel factor like HoG or PDC. This feature does not use the resized image, but rather the original kanji extracted from the segment step. Each global feature is a simple calculation that looks at the entire image, rather than scanning across in bins like histograms of oriented gradients or in rows like the peripheral directional contributivity.
 
 \begin{itemize}
     \item The height-to-width ratio of the image image. This helps to distinguish tall and skinny kanji from short and fat characters.
@@ -177,7 +179,7 @@ We have two experiments: testing well-formed, identically generated images of ea
 To generate the training data, for each font we generate a png file for each character in the hiragana alphabet, the katakana alphabet, and the Joyo subsection of Kanji. These kanji are the 2,136 characters recognized by the Japanese government as the most important kanji and the only kanji that are permitted for use in official government documents. Each character has an image generated in each of the 21 fonts.
 
 \subsection{Experiment 1}
-In this experiment, we train our Gaussian Naive Bayes classifier over 20 of the 21 fonts and test each character from the remaining font. We’ve subdivided our list of fonts into four categories called  “Standard”, “Thick”, “Thin”, and “Serifed”. To better understand the performance of our system and the efficacy of our feature selection, we tested one font from each category against the remaining 20 fonts.
+In this experiment, we train our Gaussian Naive Bayes classifier over 20 of the 21 fonts and test each character from the remaining font. We’ve subdivided our list of fonts into four categories called  ``Standard'', ``Thick'', ``Thin'', and ``Serifed''. To better understand the performance of our system and the efficacy of our feature selection, we tested one font from each category against the remaining 20 fonts.
 
 \begin{table}
     \centering
@@ -188,7 +190,7 @@ In this experiment, we train our Gaussian Naive Bayes classifier over 20 of the 
         93.2\% & 80.5\% & 84.\% & 35.0\%\\
         \hline
     \end{tabular}
-    \caption{The performance of the classifier in Experiment 1.}
+    \caption{The performance of the classifier in Experiment 1 (Higher is better).}
 \end{table}
 
 \subsection{Experiment 2}
@@ -209,7 +211,7 @@ As a third measurement, we also test the image classification after only trainin
         703 & 199 & 502 \\
         \hline
     \end{tabular}
-    \caption{Levenshtein edit distance when testing a serif font.}
+    \caption{Levenshtein edit distance when testing a serif font (lower is better).}
 \end{table}
 
 \begin{table}
@@ -221,7 +223,7 @@ As a third measurement, we also test the image classification after only trainin
         703 & 199 & 502 \\
         \hline
     \end{tabular}
-    \caption{Levenshtein edit distance when testing a sans-serif font.}
+    \caption{Levenshtein edit distance when testing a sans-serif font (lower is better).}
 \end{table}
 
 \subsection{Discussion: Segmentation}
@@ -232,9 +234,7 @@ Even late into the project, it was not obvious that the type of font mattered no
 
 In Experiment 1, the reasons for the discrepancy between serif fonts and sans-serif fonts is quite clear, we not only have fewer serif fonts than sans-serif fonts, but each serif font has a unique style of serifs that provide more distinct features than each sans-serif font. Each sans-serif font is very similar to its san-serif cohort, which is not true for serif fonts.
 
-Our understanding of and explanation for the results in Experiment 2 is more nuanced and far less obvious.
-
-First, when only training on one image, we argue that for the sans-serif font the system can find very few distinguishing features for each character and overfits the data on the exact training examples its sees. However, serif fonts are more ornate and have more complex structure, which offers more details for the classifier to grasp ahold to. When tested against scaled-down versions of the same font, the ambiguity of the sans-serif font is accentuated and the overfitting severely degrades the performance, while the serif font still has enough good features to be fairly accurate.
+Our understanding of and explanation for the results in Experiment 2 is more nuanced and far less obvious. First, when only training on one image, we argue that for the sans-serif font the system can find very few distinguishing features for each character and overfits the data on the exact training examples its sees. However, serif fonts are more ornate and have more complex structure, which offers more details for the classifier to grasp ahold to. When tested against scaled-down versions of the same font, the ambiguity of the sans-serif font is accentuated and the overfitting severely degrades the performance, while the serif font still has enough good features to be fairly accurate.
 
 When training with all of the available fonts, the performance improves for sans-serif and declines for serif fonts. This is because the large number of sans-serif fonts helps the classifier reduce overfitting and understand exactly what makes up a character in its sans-serif representation. At the same time, however, we lose track of what the serif fonts look like: a leading factor causing this is most likely our dearth of training serif fonts. The tested serif font, with its more decorative flair, causes confusion for the classifier and ultimately poor performance. Our belief is that this is due to characters in serif fonts having more distinguishing features. Said more simply, two characters in a sarif font will appear less similar than in a sans-serif font. The lack of good training data is a major factor in both Experiment 1 and Experiment 2.
 
@@ -243,7 +243,7 @@ When training with all of the available fonts, the performance improves for sans
 \subsection{Selecting Training Data}
 Our first conclusion is very obvious: we need more fonts. It is clear that training on such a limited set of fonts leads to overfitting of training data and an unreliable classifier. However, this might not be a feasible solution: there simply are not many fonts for Japanese characters. We instead examine other possible solutions in light of our results.
 
-Instead of training on all fonts, our data suggests that a reasonable approach would be to first determine whether a serif font or a sans-serif font is present in the document. We can see that by selectively training over the proper class of font can result far fewer errors. This step is reflected in previous research, where training was always performed over same font that is used in testing. [CITATION OF WU AND WU]
+Instead of training on all fonts, our data suggests that a reasonable approach would be to first determine whether a serif font or a sans-serif font is present in the document. We can see that by selectively training over the proper class of font can result far fewer errors. This step is reflected in previous research, where training was always performed over same font that is used in testing (Wu and Wu).
 
 \subsection{Selecting Features}
 Given that we are only working with machine-printed images that are normalized to 48x48 pixels, we did not expecting overfitting to be a large source of error. However, our results show that the features present in an image that has been normalized from 300x300 a pixel image differ significantly from those present in an image that is generated at 48x48 pixels. Future work should identify which features are more critical given the size of the training set.
@@ -263,9 +263,37 @@ Finally, our image segmentation, which currently enjoys a success rate of over 9
 \section{Conclusion}
 The Japanese OCR system presented in this report is competitive with the free, online tool used for baseline reports for some fonts. By leveraging a large feature space, the system is able to correctly extract Japanese characters from standard documents. Further research and testing opportunities directly extend from this paper, particularly in the fields of handwriting recognition and training classifiers on larger corpora of text.
 
+\section{Code}
+The code and data for this project is available at \url{https://github.com/sloanesturz/cs231a-proj}.\\
+\newline
+
 {\small
-\bibliographystyle{ieee}
-\bibliography{egbib}
+
+\textbf{References}\\
+
+Calonder, Michael, et al. ``BRIEF: Computing a local binary descriptor very fast.'' Pattern Analysis and Machine Intelligence, IEEE Transactions on 34.7 (2012): 1281-1298.
+
+Casey, Richard G., and Eric Lecolinet. ``A survey of methods and strategies in character segmentation.'' Pattern Analysis and Machine Intelligence, IEEE Transactions on 18.7 (1996): 690-706.
+
+Das, Soumendu, and Sreeparna Banerjee. ``An Algorithm for Japanese Character Recognition.'' International Journal of Image, Graphics and Signal Processing (IJIGSP) 7.1 (2014): 9.
+
+E. Rublee, V. Rabaud, K. Konolige, and G. Bradski. ORB: an efficient alternative to SIFT or SURF. In Proc. of the IEEE Intl. Conf. on Computer Vision (ICCV), volume 13, 2011.
+
+``FAST Algorithm for Corner Detection.'' FAST Algorithm for Corner Detection — OpenCV 3.0.0-dev Documentation. OpenCV, n.d. Web. 07 June 2016.
+
+Hong, Tao, et al. ``Visual similarity analysis of chinese characters and its uses in japanese OCR.'' IS\&T/SPIE's Symposium on Electronic Imaging: Science \& Technology. International Society for Optics and Photonics, 1995.
+
+Kimura, Fumitaka. ``OCR technologies for machine printed and hand printed Japanese text.'' Digital Document Processing. Springer London, 2007. 49-71.
+
+MacRostie, Ehry, et al. ``The BBN Byblos Japanese OCR System.'' Pattern Recognition, 2004. ICPR 2004. Proceedings of the 17th International Conference on. Vol. 2. IEEE, 2004.
+
+Shih, Yichang, and Donglai Wei. ``Machine Learning Final Project: Handwritten Sanskrit Recognition using a Multi-class SVM with K-NN Guidance.''
+
+Trier, Øivind Due, Anil K. Jain, and Torfinn Taxt. ``Feature extraction methods for character recognition-a survey.'' Pattern recognition 29.4 (1996): 641-662.
+
+Tsukumo, Jun. ``Handprinted Kanji character recognition based on flexible template matching.'' Pattern Recognition, 1992. Vol. II. Conference B: Pattern Recognition Methodology and Systems, Proceedings., 11th IAPR International Conference on. IEEE, 1992.
+
+Wu, X., Wu, M.: A recognition algorithm for chinese characters in diverse fonts. In: Proceedings of the 2002 International Conference on Image Processing (ICIP’02), vol. 3, New York, pp. 981–984 (2002).
 }
 
 \end{document}

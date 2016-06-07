@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.9.30)  6 JUN 2016 01:20
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.9.30)  6 JUN 2016 23:05
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -323,36 +323,190 @@ File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 48.
- (./egpaper_final.bbl
+Missing character: There is no â in font ptmri7t!
+Missing character: There is no € in font ptmri7t!
+Missing character: There is no ™ in font ptmri7t!
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no ™ in font ptmr7t!
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no ™ in font ptmr7t!
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no ™ in font ptmr7t!
+Missing character: There is no ç in font ptmr7t!
+Missing character: There is no © in font ptmr7t!
+Missing character: There is no « in font ptmr7t!
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no ˜ in font ptmr7t!
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no ™ in font ptmr7t!
+ <../data/kanji-Boku2/kanji_225.png, id=4, 256.96pt x 251.94125pt>
+File: ../data/kanji-Boku2/kanji_225.png Graphic file (type png)
+ <use ../data/kanji-Boku2/kanji_225.png>
+Package pdftex.def Info: ../data/kanji-Boku2/kanji_225.png used on input line 64.
+(pdftex.def)             Requested size: 94.85292pt x 93.00151pt.
+ <../data/kanji-Chigfont/kanji_225.png, id=5, 256.96pt x 257.96375pt>
+File: ../data/kanji-Chigfont/kanji_225.png Graphic file (type png)
+ <use ../data/kanji-Chigfont/kanji_225.png>
+Package pdftex.def Info: ../data/kanji-Chigfont/kanji_225.png used on input line 65.
+(pdftex.def)             Requested size: 94.85292pt x 95.22466pt.
+ <../data/kanji-GenEiHeavy/kanji_225.png, id=6, 256.96pt x 336.25626pt>
+File: ../data/kanji-GenEiHeavy/kanji_225.png Graphic file (type png)
+ <use ../data/kanji-GenEiHeavy/kanji_225.png>
+Package pdftex.def Info: ../data/kanji-GenEiHeavy/kanji_225.png used on input line 66.
+(pdftex.def)             Requested size: 94.85292pt x 124.12553pt.
+ <../data/kanji-GenEiSemiBold/kanji_225.png, id=7, 256.96pt x 336.25626pt>
+File: ../data/kanji-GenEiSemiBold/kanji_225.png Graphic file (type png)
 
-LaTeX Warning: Empty `thebibliography' environment on input line 3.
-
-)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 67.
+<use ../data/kanji-GenEiSemiBold/kanji_225.png>
+Package pdftex.def Info: ../data/kanji-GenEiSemiBold/kanji_225.png used on input line 67.
+(pdftex.def)             Requested size: 94.85292pt x 124.12553pt.
+ <../data/kanji-Gothic/kanji_225.png, id=8, 256.96pt x 254.9525pt>
+File: ../data/kanji-Gothic/kanji_225.png Graphic file (type png)
+ <use ../data/kanji-Gothic/kanji_225.png>
+Package pdftex.def Info: ../data/kanji-Gothic/kanji_225.png used on input line 68.
+(pdftex.def)             Requested size: 94.85292pt x 94.11308pt.
+ <../data/kanji-HonyaJi/kanji_225.png, id=9, 256.96pt x 237.88875pt>
+File: ../data/kanji-HonyaJi/kanji_225.png Graphic file (type png)
+ <use ../data/kanji-HonyaJi/kanji_225.png>
+Package pdftex.def Info: ../data/kanji-HonyaJi/kanji_225.png used on input line 69.
+(pdftex.def)             Requested size: 94.85292pt x 87.81418pt.
+ <../data/kanji-Lantinghei/kanji_225.png, id=10, 256.96pt x 354.32375pt>
+File: ../data/kanji-Lantinghei/kanji_225.png Graphic file (type png)
+ <use ../data/kanji-Lantinghei/kanji_225.png>
+Package pdftex.def Info: ../data/kanji-Lantinghei/kanji_225.png used on input line 70.
+(pdftex.def)             Requested size: 94.85292pt x 130.79497pt.
+ <../data/kanji-GenEiExtraLight/kanji_225.png, id=11, 256.96pt x 336.25626pt>
+File: ../data/kanji-GenEiExtraLight/kanji_225.png Graphic file (type png)
+ <use ../data/kanji-GenEiExtraLight/kanji_225.png>
+Package pdftex.def Info: ../data/kanji-GenEiExtraLight/kanji_225.png used on input line 71.
+(pdftex.def)             Requested size: 94.85292pt x 124.12553pt.
+ <../data/kanji-Chogokubo/kanji_225.png, id=12, 256.96pt x 255.95625pt>
+File: ../data/kanji-Chogokubo/kanji_225.png Graphic file (type png)
+ <use ../data/kanji-Chogokubo/kanji_225.png>
+Package pdftex.def Info: ../data/kanji-Chogokubo/kanji_225.png used on input line 72.
+(pdftex.def)             Requested size: 94.85292pt x 94.48361pt.
+ <../data/kanji-Mincho/kanji_225.png, id=13, 256.96pt x 254.9525pt>
+File: ../data/kanji-Mincho/kanji_225.png Graphic file (type png)
+ <use ../data/kanji-Mincho/kanji_225.png>
+Package pdftex.def Info: ../data/kanji-Mincho/kanji_225.png used on input line 73.
+(pdftex.def)             Requested size: 94.85292pt x 94.11308pt.
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no ™ in font ptmr7t!
  [1{/usr/local/texlive/2014/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 
-
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 67.
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no ™ in font ptmr7t!
+
+Underfull \vbox (badness 3758) has occurred while \output is active []
+
+ [2 <../data/kanji-Boku2/kanji_225.png> <../data/kanji-Chigfont/kanji_225.png> <../data/kanji-GenEiHeavy/kanji_225.png> <../data/kanji-GenEiSemiBold/kanji_225.png> <../data/kanji-Gothic/kanji_225.png> <../data/kanji-HonyaJi/kanji_225.png> <../data/kanji-Lantinghei/kanji_225.png> <../data/kanji-GenEiExtraLight/kanji_225.png> <../data/kanji-Chogokubo/kanji_225.png> <../data/kanji-Mincho/kanji_225.png>] <../segmented.png, id=33, 1030.85126pt x 313.17pt>
+File: ../segmented.png Graphic file (type png)
+ <use ../segmented.png>
+Package pdftex.def Info: ../segmented.png used on input line 103.
+(pdftex.def)             Requested size: 237.13594pt x 72.03712pt.
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no ™ in font ptmr7t!
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 114.
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no ™ in font ptmr7t!
+ [3 <../segmented.png>] <../pdc.png, id=45, 424.58624pt x 391.4625pt>
+File: ../pdc.png Graphic file (type png)
+ <use ../pdc.png>
+Package pdftex.def Info: ../pdc.png used on input line 129.
+(pdftex.def)             Requested size: 165.99443pt x 153.04607pt.
+ <../orb.png, id=46, 427.5975pt x 424.58624pt>
+File: ../orb.png Graphic file (type png)
+ <use ../orb.png>
+Package pdftex.def Info: ../orb.png used on input line 142.
+(pdftex.def)             Requested size: 165.99443pt x 164.82349pt.
+
+Underfull \vbox (badness 5274) has occurred while \output is active []
+
+ <../cog.png, id=47, 256.96pt x 254.9525pt>
+File: ../cog.png Graphic file (type png)
+ <use ../cog.png>
+Package pdftex.def Info: ../cog.png used on input line 158.
+(pdftex.def)             Requested size: 165.99443pt x 164.69789pt.
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no ™ in font ptmr7t!
+
+Underfull \vbox (badness 1838) has occurred while \output is active []
+
+ [4 <../pdc.png> <../orb.png>]
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 167.
+ (/usr/local/texlive/2014/texmf-dist/tex/latex/psnfss/omsptm.fd
+File: omsptm.fd 
+)
+LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 167.
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no ™ in font ptmr7t!
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no ™ in font ptmr7t!
+ [5 <../cog.png (PNG copy)>] [6]
+Underfull \hbox (badness 10000) in paragraph at lines 267--269
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 267--269
+
+ []
+
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 272.
+
+Underfull \hbox (badness 10000) in paragraph at lines 272--273
+
+ []
+
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no ” in font ptmr7t!
+Missing character: There is no Ã in font ptmr7t!
+Missing character: There is no ˜ in font ptmr7t!
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no ™ in font ptmr7t!
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no “ in font ptmr7t!
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 299.
+[7]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 299.
  (./egpaper_final.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 67.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 67.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 67.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 299.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 299.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 299.
  ) 
 Here is how much of TeX's memory you used:
- 6245 strings out of 493117
- 90083 string characters out of 6135433
- 172820 words of memory out of 5000000
- 9618 multiletter control sequences out of 15000+600000
- 20441 words of font info for 50 fonts, out of 8000000 for 9000
+ 6390 strings out of 493117
+ 93226 string characters out of 6135433
+ 180948 words of memory out of 5000000
+ 9706 multiletter control sequences out of 15000+600000
+ 26985 words of font info for 65 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 34i,9n,26p,261b,322s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2014/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/texlive/2014/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on egpaper_final.pdf (1 page, 44770 bytes).
+ 34i,9n,26p,1062b,324s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2014/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on egpaper_final.pdf (7 pages, 1101755 bytes).
 PDF statistics:
- 33 PDF objects out of 1000 (max. 8388607)
- 25 compressed objects within 1 object stream
- 5 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 122 PDF objects out of 1000 (max. 8388607)
+ 90 compressed objects within 1 object stream
+ 39 named destinations out of 1000 (max. 500000)
+ 71 words of extra memory for PDF output out of 10000 (max. 10000000)
 

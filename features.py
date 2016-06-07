@@ -6,7 +6,7 @@ from scipy import ndimage
 from splitter import trim_char
 
 
-FILE1 = "data/kanji-Gothic/kanji_1.png"
+FILE1 = "data/kanji-Gothic/kanji_409.png"
 FILE2 = "data/kanji-Mincho/kanji_1.png"
 FILE3 = "data/kanji-Mincho/kanji_2.png"
 
@@ -33,8 +33,14 @@ def getSurfBins(img, kps):
 
 
 def orbFeatures(img):
-  orb = cv2.ORB_create(nfeatures = 5)
+  # scaled = cv2.resize(img, (SCALED_SIZE, SCALED_SIZE))
+  orb = cv2.ORB_create(nfeatures = 15)
   kp = orb.detect(img, None)
+  print len(kp)
+  out = cv2.drawKeypoints(img, kp, None, color=(0, 255, 0))
+  cv2.imwrite('keypoints.png', out)
+  cv2.waitKey()
+
   bins = getSurfBins(img, kp)
   return bins
 
@@ -164,7 +170,7 @@ def hog(img):
   gx = cv2.Sobel(img, cv2.CV_32F, 1, 0)
   gy = cv2.Sobel(img, cv2.CV_32F, 0, 1)
   mag, ang = cv2.cartToPolar(gx, gy)
-   
+
   # quantizing binvalues in (0...16)
   bins = np.int32(NUM_BINS*ang/(2*np.pi))
   # Divide to 4 sub-squares
@@ -209,7 +215,6 @@ def all_features(img, bw = False, classifying = False):
     print "empty img, should be impossible"
 
   scaled = cv2.resize(im_bw, (SCALED_SIZE, SCALED_SIZE))
-  scaled_large = cv2.resize(im_bw, (SCALED_SIZE * 6, SCALED_SIZE * 6))
   feats = np.concatenate((
     #global_features(img),
     PDC_features(scaled, True),
@@ -223,7 +228,8 @@ def all_features(img, bw = False, classifying = False):
 
 def main():
   img1 = cv2.imread(FILE1, cv2.IMREAD_GRAYSCALE)
-  img2 = cv2.imread(FILE2, cv2.IMREAD_GRAYSCALE)
+  img2 = cv2.imread(FILE1, cv2.IMREAD_GRAYSCALE)
+  orbFeatures(img2)
   #img3 = cv2.imread(FILE3, cv2.IMREAD_GRAYSCALE)
   #print PDC_features(img1)
   for a,b in zip(PDC_diag_features(img1), PDC_diag_features(img2)): #, PDC_features(img3)):
